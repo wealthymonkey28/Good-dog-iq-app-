@@ -1,0 +1,773 @@
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Good Dog IQ: Pet Health</title>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+```
+    body {
+        font-family: 'Montserrat', sans-serif;
+        overflow-x: hidden;
+    }
+
+    .app-container {
+        min-height: 100vh;
+        position: relative;
+    }
+
+    /* Background Patterns */
+    .puzzle-pattern {
+        background: linear-gradient(135deg, #4A90E2, #7ED321);
+        background-image: 
+            radial-gradient(circle at 25% 25%, rgba(255,255,255,0.1) 2px, transparent 2px),
+            radial-gradient(circle at 75% 75%, rgba(255,255,255,0.1) 2px, transparent 2px);
+        background-size: 20px 20px;
+    }
+
+    .heart-pattern {
+        background: white;
+        background-image: 
+            radial-gradient(circle at 50% 50%, #7ED321 3px, transparent 3px);
+        background-size: 30px 30px;
+    }
+
+    .arrow-pattern {
+        background: linear-gradient(135deg, #4A90E2, #2E5BBA);
+        background-image: 
+            linear-gradient(45deg, rgba(255,255,255,0.1) 25%, transparent 25%),
+            linear-gradient(-45deg, rgba(255,255,255,0.1) 25%, transparent 25%);
+        background-size: 15px 15px;
+    }
+
+    .star-pattern {
+        background: linear-gradient(135deg, #7ED321, #5CB85C);
+        background-image: 
+            radial-gradient(circle at 20% 20%, rgba(255,215,0,0.3) 3px, transparent 3px),
+            radial-gradient(circle at 80% 80%, rgba(255,215,0,0.3) 3px, transparent 3px);
+        background-size: 25px 25px;
+    }
+
+    /* Screen Layouts */
+    .screen {
+        min-height: 100vh;
+        display: none;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        padding: 20px;
+        text-align: center;
+        position: relative;
+    }
+
+    .screen.active {
+        display: flex;
+    }
+
+    /* Golden Retriever Logo */
+    .logo {
+        width: 120px;
+        height: 120px;
+        background: linear-gradient(45deg, #FFD700, #FFA500);
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 60px;
+        margin-bottom: 30px;
+        box-shadow: 0 8px 25px rgba(255, 215, 0, 0.3);
+        animation: pulse 2s infinite;
+    }
+
+    @keyframes pulse {
+        0%, 100% { transform: scale(1); }
+        50% { transform: scale(1.05); }
+    }
+
+    /* Typography */
+    .title {
+        font-size: 24px;
+        font-weight: 700;
+        color: white;
+        margin-bottom: 20px;
+        text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+    }
+
+    .subtitle {
+        font-size: 16px;
+        color: white;
+        margin-bottom: 30px;
+        text-shadow: 1px 1px 2px rgba(0,0,0,0.3);
+    }
+
+    .result-text {
+        font-size: 24px;
+        font-weight: 700;
+        color: white;
+        margin-bottom: 15px;
+        text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+    }
+
+    .advice-text {
+        font-size: 16px;
+        color: white;
+        margin-bottom: 20px;
+        text-shadow: 1px 1px 2px rgba(0,0,0,0.3);
+        max-width: 300px;
+    }
+
+    /* Buttons */
+    .btn {
+        padding: 15px 30px;
+        border: none;
+        border-radius: 25px;
+        font-family: 'Montserrat', sans-serif;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        margin: 10px;
+        box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+    }
+
+    .btn-primary {
+        background: #4A90E2;
+        color: white;
+        font-size: 20px;
+    }
+
+    .btn-secondary {
+        background: #7ED321;
+        color: white;
+        font-size: 18px;
+    }
+
+    .btn-premium {
+        background: linear-gradient(45deg, #FFD700, #FFA500);
+        color: #333;
+        font-size: 16px;
+    }
+
+    .btn:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 6px 20px rgba(0,0,0,0.3);
+    }
+
+    /* Upload Area */
+    .upload-area {
+        width: 300px;
+        height: 200px;
+        border: 3px dashed #7ED321;
+        border-radius: 15px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        margin: 20px 0;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        background: rgba(255,255,255,0.9);
+    }
+
+    .upload-area:hover {
+        border-color: #5CB85C;
+        background: rgba(255,255,255,1);
+    }
+
+    .upload-area.dragover {
+        border-color: #FFD700;
+        background: rgba(255,215,0,0.1);
+    }
+
+    .upload-text {
+        color: #333;
+        font-size: 16px;
+        margin-top: 10px;
+    }
+
+    .upload-icon {
+        font-size: 48px;
+        color: #7ED321;
+    }
+
+    /* Progress Bar */
+    .progress-container {
+        width: 300px;
+        height: 20px;
+        background: rgba(255,255,255,0.3);
+        border-radius: 10px;
+        margin: 20px 0;
+        overflow: hidden;
+    }
+
+    .progress-bar {
+        height: 100%;
+        background: linear-gradient(45deg, #7ED321, #5CB85C);
+        width: 0%;
+        transition: width 0.5s ease;
+        border-radius: 10px;
+    }
+
+    .progress-text {
+        color: white;
+        font-size: 14px;
+        margin-top: 10px;
+    }
+
+    /* Health Graph */
+    .health-graph {
+        width: 300px;
+        height: 150px;
+        background: rgba(255,255,255,0.2);
+        border-radius: 15px;
+        margin: 20px 0;
+        display: flex;
+        align-items: end;
+        justify-content: space-around;
+        padding: 20px 10px 10px;
+    }
+
+    .bar {
+        width: 40px;
+        background: linear-gradient(to top, #FFD700, #FFA500);
+        border-radius: 5px 5px 0 0;
+        transition: height 0.8s ease;
+        position: relative;
+    }
+
+    .bar-label {
+        position: absolute;
+        bottom: -25px;
+        left: 50%;
+        transform: translateX(-50%);
+        font-size: 12px;
+        color: white;
+    }
+
+    /* Premium Features */
+    .premium-badge {
+        position: absolute;
+        top: 20px;
+        right: 20px;
+        background: linear-gradient(45deg, #FFD700, #FFA500);
+        color: #333;
+        padding: 8px 15px;
+        border-radius: 20px;
+        font-size: 14px;
+        font-weight: 600;
+    }
+
+    /* Loading Animation */
+    .loading-spinner {
+        width: 50px;
+        height: 50px;
+        border: 5px solid rgba(255,255,255,0.3);
+        border-top: 5px solid white;
+        border-radius: 50%;
+        animation: spin 1s linear infinite;
+        margin: 20px 0;
+    }
+
+    @keyframes spin {
+        0% { transform: rotate(0deg); }
+        100% { transform: rotate(360deg); }
+    }
+
+    /* ZKP Badge */
+    .zkp-badge {
+        width: 50px;
+        height: 50px;
+        background: linear-gradient(135deg, #36A2EB, #4CAF50);
+        border: 2px solid silver;
+        border-radius: 50%;
+        position: absolute;
+        top: 20px;
+        right: 20px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+        background-image: 
+            radial-gradient(circle at 25% 25%, rgba(255,255,255,0.1) 1px, transparent 1px),
+            radial-gradient(circle at 75% 75%, rgba(255,255,255,0.1) 1px, transparent 1px);
+        background-size: 8px 8px;
+    }
+
+    @media (min-width: 768px) {
+        .zkp-badge {
+            width: 100px;
+            height: 100px;
+        }
+        
+        .zkp-badge .lock-icon {
+            font-size: 24px !important;
+        }
+        
+        .zkp-badge .zkp-text {
+            font-size: 14px !important;
+        }
+    }
+
+    .zkp-badge:hover {
+        animation: zkpPulse 1s ease-in-out;
+        opacity: 0.9;
+    }
+
+    @keyframes zkpPulse {
+        0%, 100% { opacity: 1; }
+        50% { opacity: 0.9; }
+    }
+
+    .zkp-badge .lock-icon {
+        color: white;
+        font-size: 16px;
+        margin-bottom: 2px;
+    }
+
+    .zkp-badge .zkp-text {
+        color: white;
+        font-family: 'Montserrat', sans-serif;
+        font-size: 10px;
+        font-weight: 600;
+        text-align: center;
+        line-height: 1;
+    }
+
+    .zkp-badge .gold-star {
+        position: absolute;
+        top: 5px;
+        right: 5px;
+        color: #FFD700;
+        font-size: 8px;
+    }
+
+    @media (min-width: 768px) {
+        .zkp-badge .gold-star {
+            font-size: 12px;
+        }
+    }
+
+    /* ZKP Tooltip */
+    .zkp-tooltip {
+        position: absolute;
+        top: 70px;
+        right: 10px;
+        background: rgba(0,0,0,0.9);
+        color: white;
+        padding: 10px 15px;
+        border-radius: 10px;
+        font-family: 'Montserrat', sans-serif;
+        font-size: 12px;
+        max-width: 200px;
+        text-align: center;
+        display: none;
+        z-index: 1000;
+        box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+    }
+
+    .zkp-tooltip::before {
+        content: '';
+        position: absolute;
+        top: -8px;
+        right: 20px;
+        border-left: 8px solid transparent;
+        border-right: 8px solid transparent;
+        border-bottom: 8px solid rgba(0,0,0,0.9);
+    }
+
+    .zkp-tooltip.show {
+        display: block;
+        animation: fadeIn 0.3s ease;
+    }
+
+    @keyframes fadeIn {
+        from { opacity: 0; transform: translateY(-10px); }
+        to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* ZKP Teaser Text */
+    .zkp-teaser {
+        font-size: 10px;
+        color: rgba(255,255,255,0.8);
+        text-decoration: underline;
+        cursor: pointer;
+        margin-top: 10px;
+    }
+
+    .zkp-pre-scan {
+        font-size: 12px;
+        color: #666;
+        margin-top: 10px;
+        text-align: center;
+    }
+
+    /* Footer */
+    .footer {
+        position: absolute;
+        bottom: 20px;
+        left: 50%;
+        transform: translateX(-50%);
+    }
+
+    /* Mobile Responsiveness */
+    @media (max-width: 480px) {
+        .upload-area {
+            width: 280px;
+            height: 180px;
+        }
+        
+        .health-graph {
+            width: 280px;
+        }
+        
+        .title {
+            font-size: 20px;
+        }
+    }
+</style>
+```
+
+</head>
+<body>
+    <!-- Home Screen -->
+    <div class="screen active puzzle-pattern" id="homeScreen">
+        <div class="logo">🐕</div>
+        <h1 class="title">Good Dog IQ: Pet Health</h1>
+        <p class="subtitle">Upload a photo to check your pet's health!</p>
+        <button class="btn btn-primary" onclick="goToUpload()">Scan Now</button>
+        <div class="footer">
+            <button class="btn btn-premium" onclick="showPremiumInfo()">Join Premium - $5/month</button>
+            <div class="zkp-teaser" onclick="showZKPInfo()">Scans secured by ZKP</div>
+        </div>
+    </div>
+
+```
+<!-- Upload Screen -->
+<div class="screen heart-pattern" id="uploadScreen">
+    <h2 class="title" style="color: #333;">Upload Pet Photo</h2>
+    <div class="upload-area" id="uploadArea" onclick="document.getElementById('fileInput').click()">
+        <div class="upload-icon">📸</div>
+        <div class="upload-text">Upload clear eye or ear photo</div>
+        <div class="upload-text" style="font-size: 12px; color: #666;">Max 5MB - JPG, PNG</div>
+    </div>
+    <input type="file" id="fileInput" accept="image/*" style="display: none;" onchange="handleFileUpload(event)">
+    <button class="btn btn-secondary" id="analyzeBtn" onclick="startAnalysis()" disabled>Analyze</button>
+    <div class="zkp-pre-scan">🔒 ZKP ensures your photo stays private</div>
+</div>
+
+<!-- Processing Screen -->
+<div class="screen arrow-pattern" id="processingScreen">
+    <div class="logo">🔍</div>
+    <h2 class="title">Analyzing Your Pet's Health</h2>
+    <div class="loading-spinner"></div>
+    <div class="progress-container">
+        <div class="progress-bar" id="progressBar"></div>
+    </div>
+    <p class="progress-text" id="progressText">Processing...</p>
+</div>
+
+<!-- Free Results Screen -->
+<div class="screen arrow-pattern" id="freeResultsScreen">
+    <div class="zkp-badge" onclick="showZKPTooltip('freeTooltip')">
+        <div class="lock-icon">🔒</div>
+        <div class="zkp-text">ZKP<br>Secured</div>
+        <div class="gold-star">⭐</div>
+    </div>
+    <div class="zkp-tooltip" id="freeTooltip">Your scan is private with Zero-Knowledge Proofs!</div>
+    <div class="logo">📊</div>
+    <h2 class="result-text" id="freeResultScore">Eye Health: 80%</h2>
+    <p class="advice-text" id="freeResultText">Your pet's eyes look good! Check monthly.</p>
+    <div class="health-graph">
+        <div class="bar" style="height: 80px;"><div class="bar-label">Health</div></div>
+        <div class="bar" style="height: 60px;"><div class="bar-label">Avg</div></div>
+        <div class="bar" style="height: 70px;"><div class="bar-label">Goal</div></div>
+    </div>
+    <button class="btn btn-premium" onclick="showPremiumUpgrade()">Learn More ($5/month)</button>
+    <button class="btn btn-secondary" onclick="goHome()">Scan Again</button>
+</div>
+
+<!-- Premium Results Screen -->
+<div class="screen star-pattern" id="premiumResultsScreen">
+    <div class="premium-badge">PREMIUM</div>
+    <div class="zkp-badge" onclick="joinZKPCommunity()">
+        <div class="lock-icon">🔒</div>
+        <div class="zkp-text">ZKP<br>Secured</div>
+        <div class="gold-star">⭐</div>
+    </div>
+    <div class="zkp-tooltip" id="premiumTooltip">Join our ZKP Privacy community on Discord!</div>
+    <div class="logo">⭐</div>
+    <h2 class="result-text" id="premiumResultScore">Eye Health: 82%</h2>
+    <p class="advice-text" id="premiumResultAdvice">Add salmon oil to diet, 1 tsp daily.</p>
+    <div class="health-graph">
+        <div class="bar" style="height: 82px;"><div class="bar-label">Now</div></div>
+        <div class="bar" style="height: 78px;"><div class="bar-label">Last</div></div>
+        <div class="bar" style="height: 85px;"><div class="bar-label">Goal</div></div>
+        <div class="bar" style="height: 75px;"><div class="bar-label">Avg</div></div>
+    </div>
+    <button class="btn btn-premium" onclick="joinForum()">Join Forum</button>
+    <button class="btn btn-secondary" onclick="goHome()">Scan Again</button>
+</div>
+
+<script>
+    // App State
+    let currentScreen = 'homeScreen';
+    let uploadedImage = null;
+    let isPremiumUser = false;
+    let scanResults = [];
+
+    // Mock scan function
+    function mockScan(image) {
+        const baseScore = Math.floor(Math.random() * 20 + 70); // 70-90%
+        const tips = [
+            "Check monthly for changes.",
+            "Keep eyes clean and dry.",
+            "Watch for discharge or redness.",
+            "Schedule regular vet checkups."
+        ];
+        return {
+            score: baseScore,
+            tip: tips[Math.floor(Math.random() * tips.length)]
+        };
+    }
+
+    // Premium tips database
+    const premiumTips = [
+        {score: 82, tip: "Add salmon oil, 1 tsp daily."},
+        {score: 78, tip: "Consult vet for ear cleaning."},
+        {score: 85, tip: "Increase omega-3 fatty acids in diet."},
+        {score: 76, tip: "Use pet-safe eye wipes twice weekly."},
+        {score: 88, tip: "Excellent health! Maintain current routine."}
+    ];
+
+    // Mock ZKP proof generation (enhanced)
+    async function generateProof(imageData) {
+        // Simulate proof generation with enhanced logic
+        const proof = {
+            resolution: imageData.width > 500,
+            timestamp: Date.now(),
+            hash: Math.random().toString(36).substring(7),
+            verified: true,
+            privateDataProtected: true
+        };
+        
+        // Log ZKP proof details
+        console.log('🔒 ZKP Proof Generated:', proof);
+        console.log('✅ Photo resolution verified without storing raw data');
+        console.log('🛡️ Privacy protection: ACTIVE');
+        
+        // Trigger badge display after proof generation
+        displayZKPBadge();
+        
+        return proof;
+    }
+
+    function displayZKPBadge() {
+        // Badge automatically appears on results screens
+        console.log('🏆 ZKP Secured badge displayed - Trust established!');
+    }
+
+    // ZKP Badge Functions
+    function showZKPTooltip(tooltipId) {
+        const tooltip = document.getElementById(tooltipId);
+        if (tooltip) {
+            tooltip.classList.add('show');
+            setTimeout(() => {
+                tooltip.classList.remove('show');
+            }, 3000);
+        }
+    }
+
+    function showZKPInfo() {
+        alert('🔒 Zero-Knowledge Proofs (ZKP)\n\nYour pet photos are analyzed privately:\n\n✅ Proof of valid scan without storing your image\n✅ Health results verified without data exposure\n✅ Complete privacy protection\n\nTrust through cryptographic precision! 🛡️');
+    }
+
+    function joinZKPCommunity() {
+        showZKPTooltip('premiumTooltip');
+        setTimeout(() => {
+            alert('🔒 Redirecting to Discord #zkp-privacy channel...\n\nJoin fellow pet owners discussing:\n• Privacy-first pet health\n• ZKP technology insights\n• Secure health tracking tips\n\nYour data stays private, your community stays strong! 🐾');
+        }, 1000);
+    }
+
+    // Screen Navigation
+    function showScreen(screenId) {
+        document.querySelectorAll('.screen').forEach(screen => {
+            screen.classList.remove('active');
+        });
+        document.getElementById(screenId).classList.add('active');
+        currentScreen = screenId;
+    }
+
+    function goToUpload() {
+        showScreen('uploadScreen');
+    }
+
+    function goHome() {
+        showScreen('homeScreen');
+        resetUpload();
+    }
+
+    function resetUpload() {
+        uploadedImage = null;
+        document.getElementById('analyzeBtn').disabled = true;
+        document.getElementById('uploadArea').innerHTML = `
+            <div class="upload-icon">📸</div>
+            <div class="upload-text">Upload clear eye or ear photo</div>
+            <div class="upload-text" style="font-size: 12px; color: #666;">Max 5MB - JPG, PNG</div>
+        `;
+    }
+
+    // File Upload Handling
+    function handleFileUpload(event) {
+        const file = event.target.files[0];
+        if (file && file.size <= 5 * 1024 * 1024) { // 5MB limit
+            uploadedImage = file;
+            
+            // Create image preview
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                document.getElementById('uploadArea').innerHTML = `
+                    <img src="${e.target.result}" style="max-width: 200px; max-height: 150px; border-radius: 10px;">
+                    <div class="upload-text">Ready to analyze!</div>
+                `;
+            };
+            reader.readAsDataURL(file);
+            
+            document.getElementById('analyzeBtn').disabled = false;
+        } else {
+            alert('Please upload an image under 5MB');
+        }
+    }
+
+    // Drag and Drop
+    const uploadArea = document.getElementById('uploadArea');
+    
+    uploadArea.addEventListener('dragover', (e) => {
+        e.preventDefault();
+        uploadArea.classList.add('dragover');
+    });
+    
+    uploadArea.addEventListener('dragleave', () => {
+        uploadArea.classList.remove('dragover');
+    });
+    
+    uploadArea.addEventListener('drop', (e) => {
+        e.preventDefault();
+        uploadArea.classList.remove('dragover');
+        const files = e.dataTransfer.files;
+        if (files.length > 0) {
+            const fakeEvent = { target: { files: files } };
+            handleFileUpload(fakeEvent);
+        }
+    });
+
+    // Analysis Process
+    async function startAnalysis() {
+        if (!uploadedImage) return;
+        
+        showScreen('processingScreen');
+        
+        // Simulate processing with progress bar
+        let progress = 0;
+        const progressBar = document.getElementById('progressBar');
+        const progressText = document.getElementById('progressText');
+        
+        const progressSteps = [
+            "Initializing scan...",
+            "Analyzing image quality...",
+            "Processing health indicators...",
+            "Generating ZKP proof...",
+            "Finalizing results..."
+        ];
+        
+        const progressInterval = setInterval(() => {
+            progress += 20;
+            progressBar.style.width = progress + '%';
+            
+            if (progress <= 100) {
+                progressText.textContent = progressSteps[Math.floor(progress / 20) - 1] || "Processing...";
+            }
+            
+            if (progress >= 100) {
+                clearInterval(progressInterval);
+                setTimeout(() => {
+                    completeAnalysis();
+                }, 1000);
+            }
+        }, 800);
+        
+        // Generate ZKP proof (enhanced with badge trigger)
+        const imageData = { width: 800, height: 600 }; // Mock image data
+        const zkpProof = await generateProof(imageData);
+        console.log('🌟 Cosmic alignment: ZKP proof generated under Mars in Leo energy');
+    }
+
+    function completeAnalysis() {
+        const result = mockScan(uploadedImage);
+        scanResults.push(result);
+        
+        if (isPremiumUser) {
+            // Show premium results
+            const premiumResult = premiumTips[Math.floor(Math.random() * premiumTips.length)];
+            document.getElementById('premiumResultScore').textContent = `Eye Health: ${premiumResult.score}%`;
+            document.getElementById('premiumResultAdvice').textContent = premiumResult.tip;
+            showScreen('premiumResultsScreen');
+        } else {
+            // Show free results
+            document.getElementById('freeResultScore').textContent = `Eye Health: ${result.score}%`;
+            document.getElementById('freeResultText').textContent = result.tip;
+            showScreen('freeResultsScreen');
+        }
+    }
+
+    // Premium Features
+    function showPremiumInfo() {
+        alert('Premium Features:\n\n• Personalized health advice\n• Detailed analysis reports\n• Community forum access\n• Monthly health tracking\n• Priority support\n\nOnly $5/month!');
+    }
+
+    function showPremiumUpgrade() {
+        const upgrade = confirm('Upgrade to Premium for detailed analysis and personalized advice?\n\nPremium includes:\n• Custom health recommendations\n• Forum community access\n• Detailed health trends\n• Expert tips\n\nOnly $5/month!');
+        
+        if (upgrade) {
+            // Simulate premium upgrade
+            isPremiumUser = true;
+            alert('Welcome to Premium! 🌟\n\nYou now have access to all premium features. Let\'s re-analyze your pet\'s photo with our advanced algorithms!');
+            
+            // Re-run analysis with premium results
+            const premiumResult = premiumTips[Math.floor(Math.random() * premiumTips.length)];
+            document.getElementById('premiumResultScore').textContent = `Eye Health: ${premiumResult.score}%`;
+            document.getElementById('premiumResultAdvice').textContent = premiumResult.tip;
+            showScreen('premiumResultsScreen');
+        }
+    }
+
+    function joinForum() {
+        alert('Redirecting to Discord #health-tips channel...\n\nConnect with other pet owners and share health tips! 🐾');
+    }
+
+    // Initialize app
+    document.addEventListener('DOMContentLoaded', function() {
+        console.log('Good Dog IQ App initialized');
+        console.log('Astrology alignment: Jupiter in Cancer fostering trust ♋');
+        console.log('Current cosmic energy: Mars in Leo boosting engagement ♌');
+    });
+
+    // Simulate cosmic timing (Mars in Leo on June 15)
+    const currentDate = new Date();
+    if (currentDate.getMonth() === 5 && currentDate.getDate() === 15) {
+        console.log('🌟 Mars in Leo energy detected - Perfect day for bold pet health decisions!');
+    }
+</script>
+```
+
+</body>
+</html>
