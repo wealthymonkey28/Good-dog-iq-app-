@@ -12,7 +12,7 @@
 “express”,
 “api”,
 “backend”
-], 
+],  
 “author”: “Your Name”,
 “license”: “MIT”,
 “dependencies”: {
