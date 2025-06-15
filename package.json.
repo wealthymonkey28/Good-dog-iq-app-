@@ -1,0 +1,30 @@
+{
+  "name": "good-dog-iq-backend",
+  "version": "1.0.0",
+  "description": "Stripe backend API for Good D",
+  "main": "server.json",
+  "scripts": {
+    "start": "node server.json",
+    "dev": "nodemon server.json"
+  },
+  "keywords": [
+    "stripe",
+    "express",
+    "api",
+    "backend"
+  ],
+  "author": "Your Name",
+  "license": "MIT",
+  "dependencies": {
+    "express": "^4.18.2",
+    "stripe": "^12.0.0",
+    "cors": "^2.8.5",
+    "dotenv": "^16.0.3"
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.22"
+  },
+  "engines": {
+    "node": ">= 16.0.0"
+  }
+}
